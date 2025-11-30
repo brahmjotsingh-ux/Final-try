@@ -1,12 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CakeFlavor } from '../types';
-import { useBlowDetection } from '../hooks/useBlowDetection.ts';
+import { useBlowDetection } from '../hooks/useBlowDetection';
 import { CONFIG, AUDIO_URLS } from '../constants';
 
 interface StageCakeProps {
   flavor: CakeFlavor;
   onFinish: () => void;
 }
+
+const LYRICS = [
+  { text: "Happy Birthday to You 🎵", delay: 500 },
+  { text: "Happy Birthday to You 🎵", delay: 3500 },
+  { text: `Happy Birthday Dear ${CONFIG.FRIEND_NAME} 🎵`, delay: 6500 },
+  { text: "Happy Birthday to You! 🎉", delay: 9500 },
+  { text: "From good friends and true 🌟", delay: 13000 },
+  { text: "From old friends and new 💖", delay: 16000 },
+  { text: "May good luck go with you 🍀", delay: 19000 },
+  { text: "And happiness too! ✨", delay: 22000 },
+];
 
 export const StageCake: React.FC<StageCakeProps> = ({ flavor, onFinish }) => {
   // We now use two specific candles representing "2" and "5"
@@ -51,14 +62,7 @@ export const StageCake: React.FC<StageCakeProps> = ({ flavor, onFinish }) => {
         if (!newState.two && Math.random() > 0.3) newState.two = true;
         if (!newState.five && Math.random() > 0.3) newState.five = true;
         
-        // If we just blew out the last one, trigger wish immediately? 
-        // Request says: "store wish...". Usually wish happens BEFORE blowing out candles in tradition, 
-        // but the UI flow here has a text input.
-        // Let's assume we blow them out, THEN we make a wish text input? 
-        // Or we interrupt the last candle?
-        // Let's stick to the previous logic: Interrupt last candle for wish.
-        
-        // Revert to prev logic: if we are about to blow the LAST one out, stop and show wish.
+        // Interrupt last candle for wish
         const currentlyLitCount = (prev.two ? 0 : 1) + (prev.five ? 0 : 1);
         const nextLitCount = (newState.two ? 0 : 1) + (newState.five ? 0 : 1);
         
@@ -90,16 +94,30 @@ export const StageCake: React.FC<StageCakeProps> = ({ flavor, onFinish }) => {
   };
 
   const playCelebration = () => {
-    if(cheerAudio.current) cheerAudio.current.play();
+    if(cheerAudio.current) {
+        cheerAudio.current.volume = 0.5;
+        cheerAudio.current.play();
+    }
     if(pianoAudio.current) {
+        // Loop the music to cover the longer lyrics
+        pianoAudio.current.loop = true;
         pianoAudio.current.play();
         setShowLyrics(true);
-        // Enable cut button after song plays a bit (approx 12s)
-        setTimeout(() => setShowCutBtn(true), 12000);
+        // Enable cut button after first verse (approx 10s)
+        setTimeout(() => setShowCutBtn(true), 10000);
     }
   };
   
   const handleCutCake = () => {
+      // Stop audio
+      if (pianoAudio.current) {
+          pianoAudio.current.pause();
+          pianoAudio.current.currentTime = 0;
+      }
+      if (cheerAudio.current) {
+          cheerAudio.current.pause();
+      }
+
       setCakeState('CUT');
       setShowCutBtn(false);
       
@@ -146,6 +164,23 @@ export const StageCake: React.FC<StageCakeProps> = ({ flavor, onFinish }) => {
                     <NumberCandle number="5" isOut={candles.five} isBlowing={isBlowing && !candles.five} />
                 </div>
             )}
+
+            {/* Lyrics Overlay - Shows when lyrics are active and cake is whole */}
+            {showLyrics && cakeState === 'WHOLE' && (
+                 <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
+                     <div className="bg-black/60 backdrop-blur-sm p-4 rounded-2xl shadow-2xl border border-white/20 w-[95%] transform transition-all">
+                        {LYRICS.map((line, i) => (
+                            <p 
+                                key={i}
+                                className="font-['Dancing_Script'] text-xl md:text-2xl text-white leading-tight opacity-0 animate-fade-in drop-shadow-md my-1 text-center"
+                                style={{ animationDelay: `${line.delay}ms`, animationFillMode: 'forwards' }}
+                            >
+                                {line.text}
+                            </p>
+                        ))}
+                     </div>
+                </div>
+            )}
             
              {/* Cut Effect Overlay */}
              {cakeState === 'CUT' && (
@@ -157,7 +192,7 @@ export const StageCake: React.FC<StageCakeProps> = ({ flavor, onFinish }) => {
 
         {/* Controls */}
         <div className="w-full max-w-sm space-y-4">
-            {!micActive && !showWishInput && (!candles.two || !candles.five) && cakeState === 'WHOLE' && (
+            {!micActive && !showWishInput && (!candles.two || !candles.five) && cakeState === 'WHOLE' && !showLyrics && (
                 <button 
                     onClick={() => setMicActive(true)}
                     className="w-full bg-[#FF6B6B] text-white font-bold py-3 rounded-full shadow-lg hover:bg-[#ff5252] transition"
@@ -188,15 +223,6 @@ export const StageCake: React.FC<StageCakeProps> = ({ flavor, onFinish }) => {
                     >
                         Save Wish & Blow
                     </button>
-                </div>
-            )}
-            
-            {showLyrics && (
-                <div className="text-center font-['Dancing_Script'] text-2xl text-[#FF6B6B] space-y-2 h-40 flex flex-col justify-center">
-                   <p className="animate-fade-in [animation-delay:0.5s] [animation-fill-mode:forwards] opacity-0">Happy Birthday to You 🎵</p>
-                   <p className="animate-fade-in [animation-delay:3.5s] [animation-fill-mode:forwards] opacity-0">Happy Birthday to You 🎵</p>
-                   <p className="animate-fade-in [animation-delay:6.5s] [animation-fill-mode:forwards] opacity-0">Happy Birthday Dear {CONFIG.FRIEND_NAME} 🎵</p>
-                   <p className="animate-fade-in [animation-delay:9.5s] [animation-fill-mode:forwards] opacity-0">Happy Birthday to You! 🎉</p>
                 </div>
             )}
 
