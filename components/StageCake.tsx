@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { CakeFlavor } from '../types';
-import { useBlowDetection } from '../hooks/useBlowDetection';
+import { useBlowDetection } from '../hooks/useBlowDetection.ts';
 import { CONFIG, AUDIO_URLS } from '../constants';
 
 interface StageCakeProps {
