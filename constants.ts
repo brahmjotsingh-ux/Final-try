@@ -9,7 +9,7 @@ export const CONFIG = {
 export const FINAL_MESSAGES_DATA = [
   {
     id: 1,
-    text: `Main saada jeha banda haan, zyada bol nahi painda… par dil vich tuhade layi ehsaas bohot gehre ne ❤️\n\nSochia… shayad Rahat Indori saahab da andaaz mere lafzan nu thoda roshan kar deve✍️🌙\n\nVaise tan koi vi manukhi (humanly) shabd tuhadi khoobsurti, tuhadi narmi, te tuhadi rooh de noor nu poora bayan nahi kar sakde…\npar jinna ho sakeya....tuhade layi pesh hai. 💛✨\n\nJe kitte koi lafz lagg vi jaave ya kami reh jaave,\nta Bhul chuk muaf kreo…`
+    text: `Main saada jeha banda haan, zyada bol nahi painda… par dil vich tuhade layi ehsaas bohot gehre ne ❤️\n\nSochia… shayad Rahat Indori saahab da andaaz mere lafzan nu thoda roshan kar deve✍️🌙\n\nVaise tan koi vi manukhi (humanly) shabd tuhadi khoobsurti, tuhadi narmi, te tuhadi rooh de noor nu poora bayan nahi kar sakde…\npar jinna ho sakeya....tuhade layi pesh hai. 💛✨\n\nJe kitte koi lafz lagg vi jaave ya kami reh jaave,\nta Bhul chuk muaf kreo`
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ export const FINAL_MESSAGES_DATA = [
   },
   {
     id: 3,
-    text: `ਜਨਮਦਿਨ ਦੀਨ ਲੱਖ-ਲੱਖ ਵਡਾਈਆੰ\nਰੱਬ ਮੇਹਰ ਕਰੇ\nਰੱਬ ਮੇਹਰ ਕਰੇ`
+    text: `ਜਨਮਦਿਨ ਦੀਆਂ ਲੱਖ-ਲੱਖ ਵਡਾਈਆੰ\nਰੱਬ ਮੇਹਰ ਕਰੇ\nਰੱਬ ਮੇਹਰ ਕਰੇ`
   }
 ];
 
@@ -29,7 +29,3 @@ export const CAKE_FLAVORS: CakeFlavor[] = [
   { id: 'lotus', name: 'Lotus Biscoff Cheesecake', image: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?auto=format&fit=crop&w=600&q=80' },
 ];
 
-export const AUDIO_URLS = {
-  CHEER: "https://actions.google.com/sounds/v1/crowds/cheering_and_clapping.ogg",
-  PIANO: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Happy_Birthday_to_You_-_piano.ogg"
-};
