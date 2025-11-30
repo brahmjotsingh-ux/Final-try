@@ -3,6 +3,7 @@ import { BirthdayCard } from './components/BirthdayCard';
 import { Decorations } from './components/Decorations';
 import { StageTimer } from './components/StageTimer';
 import { StageCake } from './components/StageCake';
+import { FinalMessage } from './components/FinalMessage';
 import { AppStage, DecorType, CakeFlavor } from './types';
 import { CONFIG, CAKE_FLAVORS } from './constants';
 
@@ -45,7 +46,7 @@ const App: React.FC = () => {
       {/* Persistent Decorations Layer */}
       <Decorations activeTypes={selectedDecors} />
 
-      <div className="relative z-20 w-full h-full flex flex-col items-center justify-center">
+      <div className="relative z-20 w-full h-full flex flex-col items-center justify-center overflow-y-auto py-4">
         
         {stage === AppStage.CARD && (
           <BirthdayCard onOpen={() => setStage(AppStage.TIMER)} />
@@ -94,24 +95,7 @@ const App: React.FC = () => {
         )}
 
         {stage === AppStage.FINAL_MESSAGE && (
-            <div className="bg-white/95 backdrop-blur-md p-8 rounded-3xl shadow-2xl max-w-md w-[90%] text-center animate-fade-in border-4 border-[#FF6B6B]/20">
-                 <h2 className="text-3xl font-['Dancing_Script'] text-[#FF6B6B] mb-6">
-                    Happy Birthday, {CONFIG.FRIEND_NAME}!
-                 </h2>
-                 <div className="bg-[#fffdf0] p-6 rounded-lg shadow-inner mb-6 transform -rotate-1">
-                    <p className="font-['Dancing_Script'] text-2xl text-gray-800 leading-relaxed">
-                        "{CONFIG.FINAL_WISH_TEXT}"
-                    </p>
-                 </div>
-                 <p className="text-gray-500 font-semibold">From your friend ❤️</p>
-                 
-                 <button 
-                    onClick={() => window.location.reload()}
-                    className="mt-8 text-sm text-gray-400 hover:text-gray-600 underline"
-                 >
-                    Replay Experience
-                 </button>
-            </div>
+            <FinalMessage />
         )}
 
       </div>
